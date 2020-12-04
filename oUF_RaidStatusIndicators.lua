@@ -144,8 +144,9 @@ local function checkAura(unit, spells, playeronly)
 		elseif type(spell) == "string" then
 			local i, spellName = 1, UnitAura(unit, 1)
 			local casterunit = select(7,UnitAura(unit, 1))
+			local lowerSpell = strlower(spell)
 			while spellName do
-				if spellName == spell and (not playeronly or playeronly and casterunit and UnitIsUnit(casterunit,"player")) then
+				if strmatch(strlower(spellName),lowerSpell) and (not playeronly or playeronly and casterunit and UnitIsUnit(casterunit,"player")) then
 					return lCD:UnitAura(unit, i)
 				end
 				i = i + 1
@@ -155,7 +156,7 @@ local function checkAura(unit, spells, playeronly)
 			i, spellName = 1, UnitAura(unit, 1, "HARMFUL")
 			casterunit = select(7,UnitAura(unit, 1, "HARMFUL"))
 			while spellName do
-				if spellName == spell and (not playeronly or playeronly and casterunit and UnitIsUnit(casterunit,"player")) then
+				if strmatch(strlower(spellName),lowerSpell) and (not playeronly or playeronly and casterunit and UnitIsUnit(casterunit,"player")) then
 					return lCD:UnitAura(unit, i, "HARMFUL")
 				end
 				i = i + 1
