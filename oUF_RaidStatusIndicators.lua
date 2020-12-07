@@ -83,8 +83,7 @@ local function checkMissingBuff(unit, spells)
 		-- Should only check mana users.
 		local localSpells = {strsplit("/",spellGroup)}
 		for _,spell in ipairs(localSpells) do
-			local f1 = spell:find("[mana]")
-			if f1 then
+			if strfind(spell, "%[mana%]") then
 				spell = spell:gsub("%[mana%]", "")
 				if not isManaUser(unit) then
 					found = true
@@ -92,23 +91,17 @@ local function checkMissingBuff(unit, spells)
 			end
 			if not found then
 				missingSpell = spell
-				if tonumber(spell) then
+				spell = tonumber(spell) or select(7, GetSpellInfo(spell))
+				if not spell then
+					found = true
+				else
 					local i, spellID = 1, select(10,UnitAura(unit, 1))
 					while spellID do
-						if spellID == tonumber(spell) then
+						if spellID == spell then
 							found = true
 						end
 						i = i + 1
 						spellID = select(10, UnitAura(unit, i))
-					end
-				elseif type(spell) == "string" then
-					local i, spellName = 1, UnitAura(unit, 1)
-					while spellName do
-						if spellName == spell then
-							found = true
-						end
-						i = i + 1
-						spellName = UnitAura(unit, i)
 					end
 				end
 			end
