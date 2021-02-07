@@ -14,7 +14,7 @@ RaidStatusIndicators - A `table` containing frames with a .texture to show the s
                "aggro", "legacythreat", "aura", "dispel", "missing", "ownaura"
 .showTexture - Show corresponding icon on aura / dispel type instead of a color (boolean)
 .timer       - Show spinning timer (boolean)
-.nameID      - Name (exact) or ID of the effect to track. Use ; as a logical AND and / as logical OR. Also supports [mana] to only check on mana classes. Example: Arcane Intellect[mana]/Arcane Brilliance[mana];Dampen Magic
+.value      .- Table containing string buff/debuff names. For missing its a table of tables of strings. Tables are logically linked "AND" and strings in the tables themselves are logically linked "OR"
 
 ## Notes
 
@@ -75,14 +75,13 @@ local function isManaUser(unit)
 end
 
 local function checkMissingBuff(unit, spells)
-	local spellGroups = {strsplit(";",spells)}
 	local found, missingSpell
-	for _, spellGroup in ipairs(spellGroups) do
+	for _, spellGroup in ipairs(spells) do
 		-- Allow "Arcane Intellect[mana]/Arcane Brilliance[mana]"
 		-- Should only show as missing if both are missing.
 		-- Should only check mana users.
-		local localSpells = {strsplit("/",spellGroup)}
-		for _,spell in ipairs(localSpells) do
+--		local localSpells = {strsplit("/",spellGroup)}
+		for _,spell in ipairs(spellGroup) do
 			if strfind(spell, "%[mana%]") then
 				spell = spell:gsub("%[mana%]", "")
 				if not isManaUser(unit) then
@@ -115,7 +114,6 @@ local function checkMissingBuff(unit, spells)
 end
 
 local function checkAura(unit, spells, playeronly)
-	local spells = {strsplit(";",spells)}
 	for k,spell in ipairs(spells) do
 		if tonumber(spell) then
 			local i, casterunit,_,_,spellID = 1, select(7,UnitAura(unit, 1))
