@@ -173,7 +173,7 @@ local function Update(self, event, unit)
 		element:PreUpdate(unit)
 	end
 
-	local hasAggro = UnitThreatSituation(unit)
+	local hasAggro = UnitThreatSituation(UnitExists(unit) and unit or "player")
 	local legacyThreat = Vex and Vex:GetUnitAggroByUnitId(unit)
 	local icon, _, dispelType, duration, expirationTime = select(2, checkDispel(unit))
 	local hasAura, isMissing, hasOwn
@@ -388,6 +388,8 @@ local function Enable(self)
 		self:RegisterEvent("LEARNED_SPELL_IN_TAB", checkCurableSpells, true)
 		self:RegisterEvent("PLAYER_LOGIN", checkCurableSpells, true)
 		self:RegisterEvent("UNIT_PET", checkCurableSpells, true)
+
+		checkCurableSpells(self)
 
 		return true
 	end
