@@ -39,7 +39,6 @@ RaidStatusIndicators - A `table` containing frames with a .texture to show the s
 local _, ns = ...
 local oUF = ns.oUF
 
-local lCD = LibStub("LibClassicDurations")
 local Vex = LibStub("LibVexation-1.0")
 
 local playerClass = select(2, UnitClass("player"))
@@ -58,7 +57,7 @@ local function checkDispel(unit)
 	local i, name, _, _, debuffType = 1, UnitDebuff(unit, 1)
 	while name do
 		if canCure[debuffType] then
-			return lCD:UnitAura(unit, i, "HARMFUL")
+			return UnitAura(unit, i, "HARMFUL")
 		end
 		i = i + 1
 		name, _, _, debuffType = UnitDebuff(unit, i)
@@ -119,7 +118,7 @@ local function checkAura(unit, spells, playeronly)
 			local i, casterunit,_,_,spellID = 1, select(7,UnitAura(unit, 1))
 			while spellID do
 				if spellID == tonumber(spell) and (not playeronly or playeronly and casterunit and UnitIsUnit(casterunit,"player")) then
-					return lCD:UnitAura(unit, i)
+					return UnitAura(unit, i)
 				end
 				i = i + 1
 				casterunit,_,_,spellID = select(7, UnitAura(unit, i))
@@ -127,7 +126,7 @@ local function checkAura(unit, spells, playeronly)
 			i, casterunit,_,_,spellID = 1, select(7,UnitAura(unit, 1, "HARMFUL"))
 			while spellID do
 				if spellID == tonumber(spell) and (not playeronly or playeronly and casterunit and UnitIsUnit(casterunit,"player")) then
-					return lCD:UnitAura(unit, i, "HARMFUL")
+					return UnitAura(unit, i, "HARMFUL")
 				end
 				i = i + 1
 				casterunit,_,_,spellID = select(7, UnitAura(unit, i, "HARMFUL"))
@@ -138,7 +137,7 @@ local function checkAura(unit, spells, playeronly)
 			local lowerSpell = strlower(spell)
 			while spellName do
 				if strmatch(strlower(spellName),lowerSpell) and (not playeronly or playeronly and casterunit and UnitIsUnit(casterunit,"player")) then
-					return lCD:UnitAura(unit, i)
+					return UnitAura(unit, i)
 				end
 				i = i + 1
 				spellName = UnitAura(unit, i)
@@ -148,7 +147,7 @@ local function checkAura(unit, spells, playeronly)
 			casterunit = select(7,UnitAura(unit, 1, "HARMFUL"))
 			while spellName do
 				if strmatch(strlower(spellName),lowerSpell) and (not playeronly or playeronly and casterunit and UnitIsUnit(casterunit,"player")) then
-					return lCD:UnitAura(unit, i, "HARMFUL")
+					return UnitAura(unit, i, "HARMFUL")
 				end
 				i = i + 1
 				spellName = UnitAura(unit, i, "HARMFUL")
